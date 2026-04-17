@@ -109,7 +109,7 @@ export const GradesPage: React.FC = () => {
       <AddStudentModal isOpen={isStudentModalOpen} onClose={() => setIsStudentModalOpen(false)} />
       <AddEvaluationModal isOpen={isEvalModalOpen} onClose={() => setIsEvalModalOpen(false)} />
       <RoomMembersModal isOpen={isMembersModalOpen} onClose={() => setIsMembersModalOpen(false)} />
-      <EditRoomModal isOpen={isEditRoomModalOpen} onClose={() => setIsEditRoomModalOpen(false)} room={currentRoom} />
+      <EditRoomModal isOpen={isEditRoomModalOpen} onClose={() => setIsEditRoomModalOpen(false)} />
       
       {/* TopBar de la salle - Transparent */}
       <div className="bg-white/10 backdrop-blur-xl rounded-sm p-8 border border-white/10 shadow-2xl flex justify-between items-center z-10">

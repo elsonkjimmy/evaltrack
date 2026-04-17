@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { calculateStudentGrades, type RoundingRule } from '../lib/calculations';
 import { Search, Loader2, Award, BookOpen, GraduationCap, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';

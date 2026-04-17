@@ -45,10 +45,17 @@ interface AppState {
   fetchRoomData: (roomId: string) => Promise<void>;
   updateGrade: (studentId: string, evaluationId: string, score: number | null) => Promise<void>;
   updateSN: (studentId: string, roomId: string, score: number | null) => Promise<void>;
+  
+  // Student Management
   addStudent: (student: { room_id: string; matricule: string; last_name: string; first_name: string }) => Promise<void>;
+  updateStudent: (studentId: string, updates: { matricule?: string; last_name?: string; first_name?: string }) => Promise<void>;
+  deleteStudent: (studentId: string) => Promise<void>;
+
+  // Evaluation Management
   addEvaluation: (evaluation: { room_id: string; type: 'CC' | 'TP'; label: string; weight: number; position: number }) => Promise<void>;
   updateEvaluation: (evaluationId: string, updates: { label?: string; weight?: number }) => Promise<void>;
   deleteEvaluation: (evaluationId: string) => Promise<void>;
+
   addBonusMalus: (adjustment: { student_id: string; room_id: string; value: number; reason: string; created_by: string }) => Promise<void>;
   toggleRoomLock: (roomId: string, isLocked: boolean) => Promise<void>;
   updateRoom: (roomId: string, updates: any) => Promise<void>;
@@ -89,25 +96,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   setRooms: (rooms) => set({ rooms }),
   fetchRooms: async () => {
     const { user } = get();
-    console.log("Attempting to fetch rooms for user:", user?.id);
-    
-    if (!user) {
-      console.warn("No user found in store, skipping fetchRooms");
-      return;
-    }
+    if (!user) return;
 
     const { data, error } = await supabase
       .from('rooms')
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (error) {
-      console.error("Supabase Error fetching rooms:", error.message, error.details);
-      return;
+    if (!error && data) {
+      set({ rooms: data });
     }
-
-    console.log("Rooms received from Supabase:", data?.length, data);
-    set({ rooms: data || [] });
   },
 
   globalStats: {
@@ -165,7 +163,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       ),
       supabase.from('session_normale').select('*').eq('room_id', roomId),
       supabase.from('bonus_malus').select('*').eq('room_id', roomId),
-      supabase.from('room_members').select('*, profiles(full_name, avatar_url)').eq('room_id', roomId)
+      supabase.from('room_members').select('*, profiles(full_name, email, avatar_url)').eq('room_id', roomId)
     ]);
 
     if (!roomRes.error) set({ currentRoom: roomRes.data });
@@ -193,7 +191,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       .single();
 
     if (profileError || !profile) {
-      throw new Error("User with this email not found. They must have an EvalTrack account.");
+      throw new Error("User with this email not found.");
     }
 
     const { error: memberError } = await supabase.from('room_members').insert({
@@ -202,11 +200,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       ...permissions
     });
 
-    if (memberError) {
-       if (memberError.code === '23505') throw new Error("This user is already a member of this room.");
-       throw memberError;
-    }
-
+    if (memberError) throw memberError;
     await get().fetchMembers(roomId);
   },
 
@@ -245,32 +239,34 @@ export const useAppStore = create<AppState>((set, get) => ({
     if (!error) {
       await get().fetchRoomData(student.room_id);
     } else {
-      if (error.code === '23505') {
-        throw new Error(`A student with matricule "${student.matricule}" already exists in this room.`);
-      }
       throw error;
     }
   },
 
-  updateStudent: async (studentId, updates) => {
-    const { error } = await supabase.from('students').update(updates).eq('id', studentId);
-    if (!error) {
-      const { currentRoom } = get();
-      if (currentRoom) await get().fetchRoomData(currentRoom.id);
-    } else {
-      if (error.code === '23505') {
-        throw new Error(`Another student already uses the matricule "${updates.matricule}".`);
-      }
+  updateStudent: async (studentId: string, updates: any) => {
+    const { currentRoom } = get();
+    const { error } = await supabase
+      .from('students')
+      .update(updates)
+      .eq('id', studentId);
+    
+    if (!error && currentRoom) {
+      await get().fetchRoomData(currentRoom.id);
+    } else if (error) {
       throw error;
     }
   },
 
-  deleteStudent: async (studentId) => {
-    const { error } = await supabase.from('students').delete().eq('id', studentId);
-    if (!error) {
-      const { currentRoom } = get();
-      if (currentRoom) await get().fetchRoomData(currentRoom.id);
-    } else {
+  deleteStudent: async (studentId: string) => {
+    const { currentRoom } = get();
+    const { error } = await supabase
+      .from('students')
+      .delete()
+      .eq('id', studentId);
+    
+    if (!error && currentRoom) {
+      await get().fetchRoomData(currentRoom.id);
+    } else if (error) {
       throw error;
     }
   },
@@ -327,7 +323,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       .from('rooms')
       .update({ is_locked: isLocked })
       .eq('id', roomId);
-
+    
     if (!error) {
       const { data } = await supabase.from('rooms').select('*').eq('id', roomId).single();
       if (data) set({ currentRoom: data });
@@ -341,12 +337,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       .from('rooms')
       .update(updates)
       .eq('id', roomId);
-
+    
     if (!error) {
       const { data } = await supabase.from('rooms').select('*').eq('id', roomId).single();
       if (data) {
         set({ currentRoom: data });
-        // Also refresh the general rooms list
         get().fetchRooms();
       }
     } else {
@@ -355,26 +350,19 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   deleteRoom: async (roomId) => {
-    const { error } = await supabase.from('rooms').delete().eq('id', roomId);
-    if (error) {
+    const { error } = await supabase
+      .from('rooms')
+      .delete()
+      .eq('id', roomId);
+    
+    if (!error) {
+      await Promise.all([
+        get().fetchRooms(),
+        get().fetchGlobalStats()
+      ]);
+    } else {
       throw error;
     }
-
-    const { currentRoom } = get();
-    if (currentRoom?.id === roomId) {
-      set({
-        currentRoom: null,
-        currentStudents: [],
-        currentEvaluations: [],
-        currentGrades: [],
-        currentSN: [],
-        currentBonusMalus: [],
-        currentMembers: [],
-      });
-    }
-
-    await get().fetchRooms();
-    await get().fetchGlobalStats();
   },
 
   updateProfile: async (updates) => {
@@ -401,7 +389,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       });
 
     if (profileError) throw profileError;
-
     set({ user: authData.user });
   },
 
