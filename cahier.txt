@@ -1,0 +1,663 @@
+Cahier des charges professionnel
+Projet : EvalTrack
+Application de gestion académique des notes
+
+Document de référence fonctionnelle
+Version de travail structurée à partir des besoins exprimés pour l'application EvalTrack.
+Objet : formaliser le contexte, les objectifs, le périmètre, les règles académiques, les
+exigences fonctionnelles et non fonctionnelles, l'architecture fonctionnelle ainsi que le
+backlog professionnel des user stories.
+
+Nom du produit retenu : EvalTrack
+
+EvalTrack - Cahier des charges professionnel
+
+Page 1
+
+1. Présentation du projet
+1.1 Intitulé
+EvalTrack est une application web de gestion des notes académiques destinée principalement aux
+enseignants, avec des mécanismes de collaboration, de consultation sécurisée, de calcul automatique
+et d’exploitation statistique des résultats.
+
+1.2 Contexte
+Dans de nombreux contextes académiques, la gestion des notes reste encore manuelle ou
+partiellement numérisée. Cela entraîne plusieurs difficultés :
+• dispersion des données,
+• erreurs de calcul,
+• manque de traçabilité,
+• difficulté de partage entre enseignants,
+• faible exploitation statistique,
+• complexité de mise à jour et d’export.
+Le projet EvalTrack vise à résoudre ces limites à travers une application centralisée, paramétrable et
+sécurisée.
+
+1.3 Objectif général
+Mettre en place une application permettant à un enseignant de créer des espaces de travail
+académiques, d’y enregistrer des étudiants, de gérer les évaluations, de calculer automatiquement les
+notes finales et de produire des statistiques et exports exploitables.
+
+1.4 Objectifs spécifiques
+L’application devra permettre de :
+• créer et gérer des salles de classe,
+• importer ou saisir les étudiants,
+• paramétrer les composantes d’évaluation,
+• calculer automatiquement les notes,
+• gérer les bonus et malus,
+• déléguer certains droits de gestion,
+• consulter des statistiques,
+• exporter les résultats,
+• assurer la traçabilité des modifications,
+• verrouiller les notes après validation.
+
+2. Périmètre du projet
+2.1 Périmètre fonctionnel
+Le projet couvre les domaines suivants :
+• authentification et gestion des comptes,
+• gestion des salles,
+EvalTrack - Cahier des charges professionnel
+
+Page 2
+
+• gestion des rôles et permissions,
+• gestion des étudiants,
+• gestion des évaluations,
+• calcul des notes,
+• gestion des bonus et malus,
+• statistiques,
+• export des données,
+• historique des modifications,
+• verrouillage des notes.
+
+2.2 Hors périmètre initial
+Les éléments suivants peuvent être prévus pour une phase ultérieure :
+• notifications automatiques,
+• messagerie interne,
+• application mobile native,
+• multi-établissements,
+• archivage externe connecté à un autre système,
+• intégration avec d’autres plateformes scolaires.
+
+3. Description générale de la solution
+3.1 Nature de la solution
+L’application sera une plateforme web accessible via navigateur.
+
+3.2 Principe général
+Le système repose sur une unité centrale appelée salle. Une salle représente une classe, un groupe,
+une promotion ou un espace d’évaluation.
+Chaque salle est créée par un utilisateur authentifié appelé propriétaire. Ce propriétaire peut :
+• configurer la salle,
+• gérer les étudiants,
+• définir les évaluations,
+• saisir ou faire saisir les notes,
+• consulter les statistiques,
+• exporter les résultats,
+• déléguer certaines permissions.
+
+4. Acteurs du système
+4.1 Propriétaire
+Le propriétaire est l’enseignant qui crée la salle. Il dispose des droits complets sur celle-ci.
+Responsabilités du propriétaire
+
+EvalTrack - Cahier des charges professionnel
+
+Page 3
+
+• créer une salle,
+• modifier ses paramètres,
+• importer ou enregistrer les étudiants,
+• définir les CC, TP et SN,
+• configurer les coefficients et règles de calcul,
+• saisir ou modifier les notes,
+• attribuer des bonus et malus,
+• désigner des utilisateurs délégués,
+• retirer des permissions,
+• consulter les statistiques,
+• exporter les résultats,
+• verrouiller ou déverrouiller les notes.
+
+4.2 Utilisateur délégué
+Le délégué est un utilisateur authentifié auquel le propriétaire confère certains droits.
+Exemples de droits délégués
+• ajouter des étudiants,
+• saisir les notes,
+• modifier certaines notes,
+• consulter les statistiques,
+• consulter les exports.
+Restrictions possibles
+Un délégué ne doit pas, par défaut :
+• supprimer la salle,
+• transférer la propriété,
+• modifier tous les paramètres critiques,
+• gérer librement tous les autres délégués.
+Les permissions doivent donc être fines et paramétrables.
+
+4.3 Utilisateur invité
+L’utilisateur invité accède à une salle via un lien d’invitation.
+Règle retenue
+L’accès sans compte est autorisé uniquement en consultation, selon les autorisations définies par le
+propriétaire.
+Aucune opération de gestion ne peut être effectuée par un utilisateur non authentifié.
+
+4.4 Étudiant
+L’étudiant peut consulter, selon les droits accordés :
+• ses notes,
+• ses résultats,
+EvalTrack - Cahier des charges professionnel
+
+Page 4
+
+• éventuellement certaines statistiques.
+
+5. Organisation des données pédagogiques
+5.1 Salle
+Une salle constitue l’espace de gestion principal. Elle contient :
+• ses informations générales,
+• ses utilisateurs autorisés,
+• sa liste d’étudiants,
+• ses évaluations,
+• ses règles de calcul,
+• ses notes,
+• ses statistiques,
+• ses exports.
+
+5.2 Étudiant
+Chaque étudiant doit être identifié au minimum par :
+• nom,
+• prénom,
+• matricule.
+Des champs complémentaires peuvent être ajoutés plus tard.
+
+5.3 Composantes d’évaluation
+Le système repose sur trois composantes :
+• CC : Contrôle Continu,
+• TP : Travaux Pratiques,
+• SN : Session Normale.
+
+6. Règles académiques et de calcul
+6.1 Barèmes retenus
+Les barèmes de référence sont les suivants :
+• chaque CC est noté sur 20,
+• le CC total est ramené sur 30,
+• chaque TP est noté sur 20,
+• le TP total est ramené sur 40,
+• la SN est notée sur 40,
+• la note finale est affichée sur 100.
+
+6.2 Gestion des CC
+Le nombre de CC est variable et défini par le propriétaire.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 5
+
+Chaque CC possède :
+• un nom ou identifiant,
+• une note sur 20,
+• un pourcentage ou pondération.
+Calcul du CC brut
+Le système calcule la somme des produits :
+
+CC brut = somme(note de CC × pourcentage du CC)
+Calcul du CC total
+Le CC brut est multiplié par un coefficient global par défaut égal à 1,5. Ce coefficient doit être
+paramétrable.
+
+CC total = (CC brut × coefficient global CC) + bonus/malus
+Le CC total final est affiché sur 30.
+
+6.3 Gestion des TP
+Le nombre de TP est variable et défini par le propriétaire.
+Chaque TP possède :
+• un nom ou identifiant,
+• une note sur 20,
+• un pourcentage ou pondération.
+Calcul du TP brut
+Le système calcule la somme des produits :
+
+TP brut = somme(note de TP × pourcentage du TP)
+Calcul du TP total
+Le TP brut est multiplié par un coefficient global par défaut égal à 2. Ce coefficient doit être
+paramétrable.
+
+TP total = TP brut × coefficient global TP
+Le TP total final est affiché sur 40.
+
+6.4 Gestion de la SN
+La session normale correspond à une note unique sur 40.
+
+6.5 Calcul de la note finale
+La note finale est calculée ainsi :
+
+Note finale = CC total + TP total + SN
+La note finale est affichée sur 100.
+
+6.6 Gestion des bonus et malus
+Les bonus et malus s’appliquent uniquement sur le CC.
+Chaque bonus ou malus doit contenir :
+• une valeur positive ou négative,
+• la date d’enregistrement,
+EvalTrack - Cahier des charges professionnel
+
+Page 6
+
+• un motif obligatoire.
+Le système doit conserver séparément :
+• la note CC avant bonus/malus,
+• le cumul des bonus/malus,
+• la note CC finale après ajustement.
+Le motif doit être consultable dans l’interface, notamment au survol de la zone correspondante.
+
+6.7 Règle spéciale optionnelle
+Le système pourra intégrer, comme fonctionnalité avancée et facultative, un mécanisme selon lequel
+certains étudiants identifiés reçoivent automatiquement 25 % des bonus ou malus appliqués à d’autres
+étudiants.
+Cette règle ne fait pas partie du noyau minimal obligatoire et devra être activable ou désactivable.
+
+6.8 Arrondi
+Le système devra prévoir une règle d’arrondi paramétrable :
+• au dixième,
+• au centième,
+• ou à l’entier le plus proche.
+Cette règle devra être uniforme dans une salle donnée.
+
+6.9 Gestion des absences
+Le système devra permettre de distinguer :
+• présent,
+• absent justifié,
+• absent non justifié.
+Cette information pourra influencer la saisie ou l’interprétation des notes selon les règles définies par le
+propriétaire.
+
+7. Exigences fonctionnelles
+7.1 Gestion des comptes
+L’application doit permettre :
+• l’inscription d’un utilisateur,
+• la connexion,
+• la déconnexion,
+• la gestion sécurisée de session.
+Un compte est obligatoire pour :
+• créer une salle,
+• gérer des données,
+• recevoir des permissions actives de modification.
+
+7.2 Gestion des salles
+EvalTrack - Cahier des charges professionnel
+
+Page 7
+
+L’application doit permettre au propriétaire de :
+• créer une salle,
+• renommer une salle,
+• configurer ses paramètres,
+• générer un lien d’invitation,
+• gérer les membres,
+• attribuer ou retirer des permissions.
+
+7.3 Gestion des invitations
+Le système doit permettre :
+• la génération d’un lien d’accès à une salle,
+• la consultation via ce lien selon les droits accordés,
+• la limitation de certaines actions aux seuls utilisateurs authentifiés.
+
+7.4 Gestion des étudiants
+Le système doit permettre :
+• l’ajout manuel d’un étudiant,
+• l’import d’une liste d’étudiants,
+• la modification d’un étudiant,
+• la suppression d’un étudiant,
+• la recherche d’un étudiant.
+
+7.5 Import des étudiants
+Le système doit permettre l’import d’un fichier structuré contenant au minimum :
+• nom,
+• prénom,
+• matricule.
+Le système doit contrôler :
+• la présence des colonnes attendues,
+• la cohérence des données,
+• les doublons de matricules,
+• les lignes invalides.
+
+7.6 Gestion des évaluations
+Le système doit permettre :
+• de définir un nombre variable de CC,
+• de définir un nombre variable de TP,
+• de saisir une note de SN,
+• de paramétrer les pondérations,
+• de modifier les composantes avant verrouillage.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 8
+
+7.7 Saisie des notes
+Le système doit permettre :
+• la saisie individuelle,
+• la modification avant verrouillage,
+• la validation des bornes maximales,
+• la saisie rapide sur plusieurs étudiants.
+
+7.8 Gestion des bonus et malus
+Le système doit permettre :
+• l’ajout d’un bonus,
+• l’ajout d’un malus,
+• la traçabilité de la date et du motif,
+• l’affichage détaillé de l’historique.
+
+7.9 Statistiques
+Le système doit fournir au minimum :
+• la moyenne de classe,
+• le taux de réussite,
+• le taux d’échec,
+• la distribution des notes,
+• le nombre d’étudiants en difficulté.
+
+7.10 Export
+Le système doit permettre l’export des résultats en format CSV ou Excel.
+L’export minimal doit contenir :
+• nom,
+• prénom,
+• matricule,
+• CC total,
+• TP total,
+• SN,
+• note finale.
+Des exports complémentaires devront être envisagés :
+• export de la liste des étudiants,
+• export des statistiques,
+• export détaillé par composante.
+
+7.11 Historique et audit
+Le système doit enregistrer les actions importantes, notamment :
+• création d’une salle,
+
+EvalTrack - Cahier des charges professionnel
+
+Page 9
+
+• ajout ou suppression d’un étudiant,
+• modification d’une note,
+• ajout d’un bonus ou malus,
+• verrouillage ou déverrouillage.
+L’historique doit au minimum indiquer :
+• l’utilisateur auteur de l’action,
+• la date,
+• l’ancienne valeur,
+• la nouvelle valeur.
+
+7.12 Verrouillage des notes
+Le propriétaire doit pouvoir verrouiller les notes d’une salle. Une fois verrouillées :
+• les notes ne peuvent plus être modifiées,
+• sauf réouverture explicite par un utilisateur autorisé.
+
+8. Exigences non fonctionnelles
+8.1 Sécurité
+Le système doit garantir :
+• le contrôle des accès,
+• la séparation des rôles,
+• la protection des données sensibles,
+• l’authentification des utilisateurs gestionnaires.
+
+8.2 Performance
+L’application doit offrir :
+• un chargement rapide des salles,
+• un affichage fluide des notes,
+• un import raisonnablement rapide des listes d’étudiants,
+• un export rapide des données.
+
+8.3 Fiabilité
+Le système doit garantir :
+• l’exactitude des calculs,
+• la cohérence des notes,
+• la persistance des données,
+• la stabilité des résultats statistiques.
+
+8.4 Ergonomie
+L’application doit proposer :
+• une interface claire,
+
+EvalTrack - Cahier des charges professionnel
+
+Page 10
+
+• une navigation simple,
+• des formulaires compréhensibles,
+• une visualisation lisible des résultats.
+
+8.5 Traçabilité
+Toute modification importante doit pouvoir être retracée.
+
+8.6 Maintenabilité
+Le système doit être conçu de manière modulaire pour permettre des évolutions futures.
+
+9. Contraintes métier
+9.1 Contraintes académiques
+• CC sur 20, total ramené sur 30,
+• TP sur 20, total ramené sur 40,
+• SN sur 40,
+• note finale sur 100,
+• bonus/malus uniquement sur CC.
+
+9.2 Contraintes d’accès
+• création et gestion réservées aux utilisateurs authentifiés,
+• accès par lien autorisé uniquement en consultation,
+• permissions déléguées limitées et configurables.
+
+9.3 Contraintes de qualité des données
+• matricule unique dans une salle,
+• note plafonnée selon le barème,
+• motif obligatoire pour tout bonus ou malus.
+
+10. Architecture fonctionnelle
+10.1 Modules
+Le système pourra être organisé en modules :
+• module d’authentification,
+• module de gestion des salles,
+• module de gestion des utilisateurs et rôles,
+• module de gestion des étudiants,
+• module de gestion des évaluations,
+• moteur de calcul,
+• module bonus/malus,
+• module statistiques,
+• module export,
+
+EvalTrack - Cahier des charges professionnel
+
+Page 11
+
+• module historique et audit.
+
+11. Flux de fonctionnement principal
+11.1 Séquence principale
+• L’enseignant crée un compte.
+• Il se connecte à l’application.
+• Il crée une salle.
+• Il configure les paramètres de la salle.
+• Il ajoute ou importe les étudiants.
+• Il définit les CC, TP et SN.
+• Il saisit les notes.
+• Il attribue, si nécessaire, des bonus ou malus.
+• Le système calcule automatiquement les totaux et la note finale.
+• L’enseignant consulte les statistiques.
+• Il verrouille éventuellement les notes.
+• Il exporte les résultats.
+
+12. Critères de réussite du projet
+12.1 Validation du résultat
+Le projet sera considéré comme réussi si l’application permet effectivement de :
+• créer et gérer une salle,
+• importer une liste d’étudiants,
+• paramétrer les évaluations,
+• calculer correctement les notes sur 30, 40 et 100,
+• gérer les bonus et malus sur CC,
+• déléguer certains droits,
+• produire des statistiques fiables,
+• exporter des résultats corrects,
+• tracer les modifications,
+• verrouiller les notes.
+
+13. Nom du produit
+13.1 Nom retenu
+Le nom retenu pour l’application est :
+
+EvalTrack
+
+13.2 Justification
+Ce nom évoque :
+EvalTrack - Cahier des charges professionnel
+
+Page 12
+
+• le suivi des évaluations,
+• la traçabilité,
+• la gestion académique structurée.
+Il est simple, professionnel et adapté à une application de notes.
+
+14. Backlog professionnel des user stories
+Épic 1 : Authentification
+- US1 — En tant qu’utilisateur, je veux créer un compte afin d’accéder aux fonctionnalités de
+gestion.
+- US2 — En tant qu’utilisateur, je veux me connecter afin d’accéder à mes salles.
+- US3 — En tant qu’utilisateur, je veux me déconnecter afin de sécuriser ma session.
+
+Épic 2 : Gestion des salles
+- US4 — En tant qu’enseignant, je veux créer une salle afin d’organiser une classe.
+- US5 — En tant que propriétaire, je veux configurer une salle afin d’adapter son fonctionnement
+académique.
+- US6 — En tant que propriétaire, je veux générer un lien d’invitation afin de partager un accès à la
+salle.
+- US7 — En tant que propriétaire, je veux attribuer des permissions à des utilisateurs afin de
+déléguer certaines tâches.
+- US8 — En tant que propriétaire, je veux retirer des permissions afin de garder le contrôle de la
+salle.
+
+Épic 3 : Gestion des étudiants
+- US9 — En tant qu’enseignant, je veux ajouter un étudiant manuellement afin de l’intégrer à la
+salle.
+- US10 — En tant qu’enseignant, je veux importer une liste d’étudiants afin de gagner du temps.
+- US11 — En tant qu’enseignant, je veux corriger les informations d’un étudiant afin de maintenir
+des données fiables.
+- US12 — En tant qu’enseignant, je veux supprimer un étudiant afin d’actualiser la liste.
+
+Épic 4 : Gestion des évaluations
+- US13 — En tant qu’enseignant, je veux définir le nombre de CC afin de refléter l’organisation
+réelle du cours.
+- US14 — En tant qu’enseignant, je veux définir le nombre de TP afin de refléter l’organisation réelle
+des travaux pratiques.
+- US15 — En tant qu’enseignant, je veux attribuer un pourcentage à chaque CC et TP afin de
+pondérer les notes.
+- US16 — En tant qu’enseignant, je veux saisir les notes des CC afin d’évaluer les étudiants.
+- US17 — En tant qu’enseignant, je veux saisir les notes des TP afin d’évaluer les étudiants.
+- US18 — En tant qu’enseignant, je veux saisir la note de session normale afin de compléter
+l’évaluation finale.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 13
+
+Épic 5 : Calcul des notes
+- US19 — En tant que système, je veux calculer le CC brut à partir des pondérations afin d’obtenir
+une base de calcul.
+- US20 — En tant que système, je veux appliquer le coefficient global du CC afin de produire le CC
+total sur 30.
+- US21 — En tant que système, je veux calculer le TP brut à partir des pondérations afin d’obtenir
+une base de calcul.
+- US22 — En tant que système, je veux appliquer le coefficient global du TP afin de produire le TP
+total sur 40.
+- US23 — En tant que système, je veux additionner CC total, TP total et SN afin d’obtenir la note
+finale sur 100.
+- US24 — En tant qu’enseignant, je veux paramétrer les coefficients globaux afin d’adapter le
+système à ma méthode.
+
+Épic 6 : Bonus et malus
+- US25 — En tant qu’enseignant, je veux attribuer un bonus à un étudiant afin de valoriser une
+performance ou un comportement.
+- US26 — En tant qu’enseignant, je veux attribuer un malus à un étudiant afin de sanctionner une
+situation donnée.
+- US27 — En tant que système, je veux appliquer les bonus et malus uniquement au CC afin de
+respecter la règle métier.
+- US28 — En tant que système, je veux enregistrer la date et le motif de chaque bonus ou malus
+afin d’assurer la traçabilité.
+- US29 — En tant qu’utilisateur, je veux voir le motif associé à un bonus ou malus afin de
+comprendre l’ajustement.
+- US30 — En tant que propriétaire, je veux activer ou désactiver la règle spéciale des 25 % afin de
+contrôler cette logique avancée.
+
+Épic 7 : Permissions et accès
+- US31 — En tant que propriétaire, je veux accorder des droits précis à un délégué afin d’éviter une
+délégation excessive.
+- US32 — En tant que système, je veux limiter l’accès sans compte à la consultation afin de
+sécuriser la gestion.
+- US33 — En tant qu’utilisateur invité, je veux consulter une salle via lien afin d’accéder aux
+informations autorisées.
+
+Épic 8 : Statistiques et suivi
+- US34 — En tant qu’enseignant, je veux consulter la moyenne de la classe afin d’évaluer la
+performance générale.
+- US35 — En tant qu’enseignant, je veux connaître le taux de réussite afin d’analyser la qualité des
+résultats.
+- US36 — En tant qu’enseignant, je veux connaître le taux d’échec afin d’identifier les difficultés
+majeures.
+- US37 — En tant qu’enseignant, je veux visualiser la distribution des notes afin d’interpréter les
+résultats.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 14
+
+- US38 — En tant qu’enseignant, je veux consulter un tableau de bord global afin d’avoir une vue
+synthétique de la salle.
+
+Épic 9 : Export
+- US39 — En tant qu’enseignant, je veux exporter les résultats afin de les partager ou les archiver.
+- US40 — En tant qu’enseignant, je veux choisir le type d’export afin d’obtenir uniquement les
+données utiles.
+- US41 — En tant que système, je veux produire un fichier structuré afin de faciliter la réutilisation
+des données.
+
+Épic 10 : Historique et verrouillage
+- US42 — En tant que système, je veux enregistrer les modifications importantes afin de conserver
+un historique fiable.
+- US43 — En tant qu’enseignant, je veux savoir qui a modifié une note afin de renforcer la confiance
+et le contrôle.
+- US44 — En tant qu’enseignant, je veux verrouiller les notes afin d’empêcher toute modification
+après validation.
+- US45 — En tant que propriétaire, je veux réouvrir exceptionnellement une salle verrouillée afin
+d’autoriser une correction.
+
+Épic 11 : Ergonomie et qualité de saisie
+- US46 — En tant qu’utilisateur, je veux rechercher un étudiant par nom ou matricule afin de
+travailler plus rapidement.
+- US47 — En tant qu’utilisateur, je veux filtrer les étudiants ou les résultats afin d’analyser plus
+efficacement la salle.
+- US48 — En tant que système, je veux contrôler les valeurs saisies afin d’éviter les erreurs de
+notation.
+- US49 — En tant que système, je veux détecter les doublons lors de l’import afin de préserver
+l’intégrité des données.
+- US50 — En tant qu’enseignant, je veux gérer les absences afin de mieux interpréter certaines
+notes.
+
+15. Conclusion générale
+15.1 Synthèse
+Le projet EvalTrack constitue une solution complète de gestion académique des notes, fondée sur :
+• une organisation par salles,
+• des rôles et permissions maîtrisés,
+• une gestion souple des évaluations,
+• des calculs automatisés,
+• une traçabilité forte,
+• des statistiques exploitables,
+• une capacité d’export adaptée aux besoins pédagogiques.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 15
+
+Ce cahier des charges pose une base professionnelle claire pour passer ensuite à la modélisation
+UML, à la base de données et à l’architecture technique.
+
+EvalTrack - Cahier des charges professionnel
+
+Page 16
+
+

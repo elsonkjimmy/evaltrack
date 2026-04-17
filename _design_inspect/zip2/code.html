@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EvalTrack - Student Evaluation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9fa",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c4c6cc",
+                    "tertiary-container": "#1c1c11",
+                    "tertiary-fixed": "#e6e3d0",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#44474c",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-fixed-variant": "#3c475d",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#1c1c11",
+                    "primary-container": "#3c0800",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f0f1f2",
+                    "secondary-fixed": "#d7e2ff",
+                    "surface-container-high": "#e7e8e9",
+                    "tertiary-fixed-dim": "#c9c7b5",
+                    "on-primary-container": "#c9684e",
+                    "inverse-surface": "#2e3132",
+                    "surface-bright": "#f8f9fa",
+                    "on-primary-fixed-variant": "#7c2e19",
+                    "secondary-container": "#d7e2ff",
+                    "on-secondary-container": "#5a647c",
+                    "on-surface": "#191c1d",
+                    "primary": "#000000",
+                    "inverse-primary": "#ffb4a1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#48473a",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#bbc6e2",
+                    "primary-fixed": "#ffdbd2",
+                    "secondary": "#545e76",
+                    "on-secondary-fixed": "#101b30",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f4f5",
+                    "outline": "#74777d",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#000000",
+                    "on-background": "#191c1d",
+                    "surface-variant": "#e1e3e4",
+                    "background": "#f8f9fa",
+                    "on-tertiary-container": "#868474",
+                    "surface-container-highest": "#e1e3e4",
+                    "surface-tint": "#9a442d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-transition {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e1e3e4 100%);
+        }
+        .glass-highlight {
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+        }
+        body {
+            background: linear-gradient(135deg, #101b30 0%, #3c0800 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface antialiased overflow-hidden">
+<div class="flex min-h-screen">
+<!-- Floating Glass Sidebar -->
+<aside class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl rounded-[3rem] m-8 w-72 h-[calc(100vh-4rem)] sticky left-0 shadow-[0_20px_40px_rgba(0,0,0,0.06)] flex flex-col p-6 z-40">
+<div class="flex items-center gap-3 px-4 mb-10">
+<div class="w-10 h-10 rounded-xl bg-surface-tint flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<div>
+<h1 class="font-headline font-bold tracking-tight text-2xl text-slate-900">EvalTrack</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Academic Excellence</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-6 py-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-300 rounded-full scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline font-bold tracking-tight">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 bg-[#d7e2ff] text-slate-900 font-bold rounded-full scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-headline font-bold tracking-tight">Evaluations</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-300 rounded-full scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+<span class="font-headline font-bold tracking-tight">Research</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-300 rounded-full scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span class="font-headline font-bold tracking-tight">Resources</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all duration-300 rounded-full scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-headline font-bold tracking-tight">Settings</span>
+</a>
+</nav>
+<button class="mb-8 w-full py-4 bg-surface-tint text-white rounded-full font-headline font-bold shadow-lg shadow-surface-tint/20 hover:shadow-surface-tint/40 transition-all scale-95 active:scale-90">
+                New Evaluation
+            </button>
+<div class="pt-6 border-t border-outline-variant/15 space-y-2">
+<a class="flex items-center gap-3 px-6 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-2 text-error hover:text-error/80 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 pr-8">
+<!-- Top Navigation Bar -->
+<header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl rounded-[3rem] mt-8 mr-8 ml-4 h-20 sticky top-0 shadow-[0_20px_40px_rgba(0,0,0,0.06)] flex justify-between items-center px-10 z-30 outline-variant opacity-100">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-96 focus-within:ring-2 focus-within:ring-[#9a442d]/20 rounded-full transition-all">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 text-sm focus:ring-0" placeholder="Search evaluations..." type="text"/>
+</div>
+<nav class="flex items-center gap-8">
+<a class="font-['Inter'] text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors" href="#">Overview</a>
+<a class="font-['Inter'] text-sm font-bold text-[#9a442d] border-b-2 border-[#9a442d] pb-1" href="#">Analytics</a>
+<a class="font-['Inter'] text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="dark_mode">dark_mode</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900">Dr. Julian Vance</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Senior Evaluator</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover border-2 border-surface-tint/20 group-hover:border-surface-tint transition-all" data-alt="Close-up portrait of a professional male academic in a library setting with warm, soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhLXC7OAmF0hbUgzmu2OZDbRrdG9lQPFNckYXtiWQDUK-j-uvsiWaYg3cKfjoiJFZ90T4TynpnRjryXj73jyfnPU-OnFbCVcQ04gQPc2Qspf-VG9d7wMgCcAOqSnDtk34wvkrtSVdVWT07bA-q7pTEwcK3uD6t8CleoMgCdEGo5FOgQBp1L7T700Tv9y9L8eUSUY--PK0ScpKJepgC06tADpyaPuoCMH82eEs_5e1NkXQeBic5ktdozgRD368G8ZDkwlISZ1DF750"/>
+</div>
+</div>
+</header>
+<!-- Table Content (The Base Screen) -->
+<div class="mt-8 ml-4 flex-1">
+<div class="flex items-end justify-between mb-8 px-4">
+<div>
+<h2 class="font-headline font-extrabold text-4xl text-white tracking-tight">Student Performance</h2>
+<p class="text-white/60 mt-1 font-medium">Mid-term Evaluation Period: Fall 2024</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Filter
+                        </button>
+<button class="px-6 py-2.5 bg-white text-slate-900 rounded-full text-sm font-bold flex items-center gap-2 shadow-xl hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                            Export CSV
+                        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden mb-12">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant/15">
+<tr>
+<th class="px-8 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Student ID</th>
+<th class="px-8 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Full Name</th>
+<th class="px-8 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Major</th>
+<th class="px-8 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Current Grade</th>
+<th class="px-8 py-5 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-8 py-5 text-right text-xs font-bold text-on-surface-variant uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/15">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6 font-mono text-sm text-on-surface-variant">#STU-9201</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-[10px] font-bold">EM</div>
+<span class="font-semibold text-slate-900">Elena Martinez</span>
+</div>
+</td>
+<td class="px-8 py-6 text-sm">Biomedical Science</td>
+<td class="px-8 py-6 font-bold text-slate-900 text-lg">A+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">Excellent</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-surface-tint/10 rounded-full text-surface-tint transition-all">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6 font-mono text-sm text-on-surface-variant">#STU-8473</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center text-[10px] font-bold">JB</div>
+<span class="font-semibold text-slate-900">Julian Brooks</span>
+</div>
+</td>
+<td class="px-8 py-6 text-sm">Computer Physics</td>
+<td class="px-8 py-6 font-bold text-slate-900 text-lg">B-</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-wider">Average</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-surface-tint/10 rounded-full text-surface-tint transition-all">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-8 py-6 font-mono text-sm text-on-surface-variant">#STU-7112</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center text-[10px] font-bold">SH</div>
+<span class="font-semibold text-slate-900">Sarah Hughes</span>
+</div>
+</td>
+<td class="px-8 py-6 text-sm">Applied Mathematics</td>
+<td class="px-8 py-6 font-bold text-slate-900 text-lg">A-</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">Excellent</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-surface-tint/10 rounded-full text-surface-tint transition-all">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<!-- Edit Student Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/60 backdrop-blur-md">
+<!-- Glassmorphism Modal -->
+<div class="relative w-full max-w-2xl bg-white/20 dark:bg-slate-900/40 backdrop-blur-3xl rounded-[3rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.3)] glass-highlight border border-white/20">
+<!-- Header -->
+<div class="flex justify-between items-start mb-10">
+<div>
+<h3 class="font-headline font-extrabold text-3xl text-white tracking-tight">Edit Evaluation</h3>
+<p class="text-white/70 font-medium mt-1">Refine student performance metrics for Fall 2024</p>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Form Content -->
+<form class="space-y-8">
+<div class="grid grid-cols-2 gap-6">
+<!-- Student Identity -->
+<div class="col-span-2 flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/10">
+<div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/10 flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Close-up artistic portrait of a young female student with thoughtful expression against a soft-focus library background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0ztbXWFktdAPqOhqTO0sfi6hxTXcTd0b-YAM9I4vxU9ukUXkZP9oVCM0kQaXr7hPMxZ2Y7Dcv3myFuj1nmibVFph3yRpiVWJeRD9uTORvP9DXqj-OLdObu95SVl1GrVf4vlOJx5oscE8UyOJjPoHb7SSNyeDbExvPMyTy8Kox62XGGnU0IAgTeU4jcYUGr5EvtJUbTw9XneO13oAiw-bJyumoAh1TGJtN2FT-KvE4_QWeywSZG8P2VaONcNXVHX-gIi6FbtzT1A4"/>
+</div>
+<div>
+<p class="text-xs font-bold text-white/50 uppercase tracking-widest">Selected Student</p>
+<h4 class="text-xl font-headline font-bold text-white">Elena Martinez</h4>
+<p class="text-xs text-secondary-fixed font-medium">Biomedical Science · ID #STU-9201</p>
+</div>
+</div>
+<!-- Input: Grade Selection -->
+<div class="space-y-2">
+<label class="block text-xs font-bold text-white uppercase tracking-widest ml-1">Overall Grade</label>
+<div class="relative group">
+<select class="w-full bg-white border-none rounded-2xl py-4 px-6 text-slate-900 font-bold focus:ring-4 focus:ring-surface-tint/20 appearance-none shadow-xl">
+<option>A+</option>
+<option>A</option>
+<option>A-</option>
+<option>B+</option>
+<option>B</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Input: Status Badge -->
+<div class="space-y-2">
+<label class="block text-xs font-bold text-white uppercase tracking-widest ml-1">Performance Status</label>
+<div class="relative group">
+<select class="w-full bg-white border-none rounded-2xl py-4 px-6 text-slate-900 font-bold focus:ring-4 focus:ring-surface-tint/20 appearance-none shadow-xl">
+<option>Excellent</option>
+<option>Above Average</option>
+<option>Average</option>
+<option>Requires Support</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Input: Comments -->
+<div class="col-span-2 space-y-2">
+<label class="block text-xs font-bold text-white uppercase tracking-widest ml-1">Evaluator Comments</label>
+<textarea class="w-full bg-white border-none rounded-2xl p-6 text-slate-900 text-sm focus:ring-4 focus:ring-surface-tint/20 shadow-xl resize-none" placeholder="Enter detailed feedback here..." rows="4">Elena has demonstrated exceptional mastery of core biomechanics concepts. Her analytical approach to problem-solving in Lab 4 was particularly noteworthy.</textarea>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end gap-4 pt-4">
+<button class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-full font-headline font-bold transition-all border border-white/10" type="button">
+                        Cancel Changes
+                    </button>
+<button class="px-10 py-4 bg-surface-tint text-white rounded-full font-headline font-bold shadow-[0_10px_30px_rgba(154,68,45,0.4)] hover:scale-105 active:scale-95 transition-all" type="submit">
+                        Save Evaluation
+                    </button>
+</div>
+</form>
+</div>
+</div>
+</body></html>

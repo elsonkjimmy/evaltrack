@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EvalTrack | Academic Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9fa",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c4c6cc",
+                    "tertiary-container": "#1c1c11",
+                    "tertiary-fixed": "#e6e3d0",
+                    "on-primary": "#ffffff",
+                    "on-surface-variant": "#44474c",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-fixed-variant": "#3c475d",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#1c1c11",
+                    "primary-container": "#3c0800",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f0f1f2",
+                    "secondary-fixed": "#d7e2ff",
+                    "surface-container-high": "#e7e8e9",
+                    "tertiary-fixed-dim": "#c9c7b5",
+                    "on-primary-container": "#c9684e",
+                    "inverse-surface": "#2e3132",
+                    "surface-bright": "#f8f9fa",
+                    "on-primary-fixed-variant": "#7c2e19",
+                    "secondary-container": "#d7e2ff",
+                    "on-primary-fixed": "#3c0800",
+                    "surface-tint": "#9a442d",
+                    "primary-fixed-dim": "#ffb4a1",
+                    "on-secondary-container": "#5a647c",
+                    "on-surface": "#191c1d",
+                    "primary": "#000000",
+                    "inverse-primary": "#ffb4a1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#48473a",
+                    "surface-container": "#edeeef",
+                    "secondary-fixed-dim": "#bbc6e2",
+                    "primary-fixed": "#ffdbd2",
+                    "secondary": "#545e76",
+                    "on-secondary-fixed": "#101b30",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f3f4f5",
+                    "outline": "#74777d",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#000000",
+                    "on-background": "#191c1d",
+                    "surface-variant": "#e1e3e4",
+                    "background": "#f8f9fa",
+                    "on-tertiary-container": "#868474",
+                    "surface-container-highest": "#e1e3e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>body {
+    background: linear-gradient(135deg, #0D1B2A 0%, #9a442d 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative
+    }
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBnpYyIW9yB-gKtxFfNPwtqzDNgXQ-VKlCxt5lyy0s7GBkOq0XGmE_R3wzqPDJyFKrHn2CSU8Nol3eBvK3qJK1IyLq_Fmq0PNatIfhKQYAzjJE4Ald0tDXrp5HzD3IZV1OSiA_-JuGycgYYpoi5ngdRLsQMliY_QYSxCSwSSwyomzuaoWWzlkwhlP3q5YC8vqwRIZ91D9wWjbJZvD7C1ZF5vJRGOFq6QWYPa9BPrxBjZhQxkIyFElJtPM7W_Iviq-CAzqbtwrk0ZPA);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.tonal-transition {
+    transition: all 0.3s ease
+    }
+.no-border {
+    border: none !important
+    }</style>
+</head>
+<body class="font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Sidebar Shell -->
+<aside class="flex flex-col p-6 fixed left-0 top-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl rounded-[3rem] m-8 w-72 h-[calc(100vh-4rem)] sticky left-0 tonal-transition no-border shadow-[0_20px_40px_rgba(0,0,0,0.06)] z-50">
+<div class="flex items-center gap-3 px-4 mb-10">
+<div class="w-10 h-10 rounded-full bg-surface-tint flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<h1 class="font-headline font-bold tracking-tight text-2xl text-slate-900 dark:text-slate-50 leading-none">EvalTrack</h1>
+<p class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant opacity-70">Academic Excellence</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<!-- Active State Logic: Dashboard is the primary intent -->
+<a class="bg-[#d7e2ff] text-slate-900 font-bold rounded-full flex items-center gap-4 p-4 font-headline tracking-tight transition-all duration-300 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 flex items-center gap-4 p-4 font-headline font-bold tracking-tight rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Evaluations</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 flex items-center gap-4 p-4 font-headline font-bold tracking-tight rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+<span>Research</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 flex items-center gap-4 p-4 font-headline font-bold tracking-tight rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span>Resources</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-white/40 dark:hover:bg-slate-800/40 flex items-center gap-4 p-4 font-headline font-bold tracking-tight rounded-full transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2">
+<button class="w-full bg-primary text-white py-4 px-6 rounded-full font-headline font-bold shadow-lg shadow-primary/20 hover:bg-surface-tint transition-all duration-300 mb-6">
+                New Evaluation
+            </button>
+<div class="flex flex-col gap-1">
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 flex items-center gap-4 px-4 py-2 text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-slate-900 flex items-center gap-4 px-4 py-2 text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-h-screen">
+<!-- Top Navigation Shell -->
+<header class="flex justify-between items-center px-10 w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl rounded-[3rem] mt-8 mr-8 ml-4 h-20 sticky top-0 outline-variant opacity-15 shadow-[0_20px_40px_rgba(0,0,0,0.06)] z-40">
+<div class="flex items-center gap-8">
+<div class="relative flex items-center bg-surface-container-low rounded-full px-4 py-2 w-64 focus-within:ring-2 focus-within:ring-[#9a442d]/20 transition-all">
+<span class="material-symbols-outlined text-outline text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-medium w-full placeholder:text-outline-variant" placeholder="Search evaluations..." type="text"/>
+</div>
+<nav class="hidden md:flex gap-8 font-['Inter'] text-sm font-medium">
+<a class="text-[#9a442d] font-bold border-b-2 border-[#9a442d] pb-1" href="#">Overview</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Analytics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/40 hover:bg-white/60 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/40 hover:bg-white/60 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="dark_mode">dark_mode</span>
+</button>
+<div class="h-10 w-[1px] bg-outline-variant opacity-20 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900">Dr. Aris Thorne</p>
+<p class="text-[10px] text-on-surface-variant opacity-60">Lead Reviewer</p>
+</div>
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover border-2 border-white/50" data-alt="portrait of a distinguished academic man with grey hair and glasses in a professional studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl8BrzdGGTwyWqcg05Te0L2F6jTGVRxnNgGgVli6g8nikGql8Wvx6wvgNtjOfl0QM70TXYDmCTRNbIPZmUeKrWvGD2iD5OfJHgMbfrGWMYLyMeTpZt4ISOlJHTWObGADqux5ObM8AWm7vIUVMxTgjCFCeI4dlsIZfeYD84nbZPSl49v2OPPo_lEfaHeM_3DrV8w7Yonk_kdc3UvAx_HuijKhShZOTtS64wZJGkizfiFIislV29TWtgLvqrpV8sL--E7g3gadDnxmU"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="p-8 flex flex-col gap-8 ml-[320px]">
+<!-- Hero Section -->
+<section class="flex flex-col gap-1">
+<h2 class="font-headline text-3xl font-extrabold text-white tracking-tight">Academic Overview</h2>
+<p class="text-white/70 font-medium">Welcome back, Dr. Thorne. Here's what's happening today.</p>
+</section>
+<!-- Stats Row -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-fixed rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-fixed" data-icon="assignment">assignment</span>
+</div>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span>
+</div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-1">Total Evaluations</p>
+<h3 class="font-headline text-3xl font-extrabold text-primary">1,284</h3>
+</div>
+<div class="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-fixed rounded-lg">
+<span class="material-symbols-outlined text-on-primary-fixed" data-icon="pending_actions">pending_actions</span>
+</div>
+<span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Active</span>
+</div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-1">In Progress</p>
+<h3 class="font-headline text-3xl font-extrabold text-primary">42</h3>
+</div>
+<div class="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-fixed rounded-lg">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="verified_user">verified_user</span>
+</div>
+<span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">98%</span>
+</div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-1">Compliance Rate</p>
+<h3 class="font-headline text-3xl font-extrabold text-primary">High</h3>
+</div>
+<div class="bg-white/70 backdrop-blur-xl rounded-xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border-none">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="group">group</span>
+</div>
+<span class="text-[10px] font-bold text-slate-600 bg-slate-50 px-2 py-1 rounded-full">New</span>
+</div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest mb-1">Researchers</p>
+<h3 class="font-headline text-3xl font-extrabold text-primary">156</h3>
+</div>
+</section>
+<!-- Data & Activity Bento -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Chart Area -->
+<div class="lg:col-span-2 bg-white/70 backdrop-blur-3xl rounded-xl p-8 shadow-[0_20px_40px_rgba(0,0,0,0.06)] flex flex-col gap-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline text-xl font-bold text-slate-900">Research Trends</h3>
+<p class="text-sm text-on-surface-variant">Performance across faculties (Yearly)</p>
+</div>
+<div class="flex gap-2">
+<span class="inline-flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-surface-container-high transition-colors">
+                                Monthly <span class="material-symbols-outlined text-xs">expand_more</span>
+</span>
+</div>
+</div>
+<!-- Clean Solid Chart Container -->
+<div class="flex-1 bg-surface-container-lowest rounded-lg p-6 min-h-[300px] flex items-end justify-between gap-4">
+<div class="w-full flex items-end gap-2 h-full">
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[40%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-[10px] py-1 px-2 rounded">4.2k</div>
+</div>
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[65%] relative group"></div>
+<div class="flex-1 bg-surface-tint rounded-t-lg h-[85%] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] py-1 px-2 rounded">8.9k</div>
+</div>
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[55%] relative group"></div>
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[70%] relative group"></div>
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[45%] relative group"></div>
+<div class="flex-1 bg-surface-container-low hover:bg-surface-tint/20 transition-all rounded-t-lg h-[90%] relative group"></div>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="bg-white/70 backdrop-blur-3xl rounded-xl p-8 shadow-[0_20px_40px_rgba(0,0,0,0.06)] flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline text-xl font-bold text-slate-900">Recent Activity</h3>
+<button class="text-surface-tint text-xs font-bold hover:underline">View All</button>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex gap-4">
+<div class="relative">
+<img alt="Activity User" class="w-10 h-10 rounded-full object-cover" data-alt="portrait of a young female professor in a library with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtGqYJVEcLkaTmm8oDW5e_pDiEo58hnQYL3Wq9b2RWS60bDuqK42VHJ5GnA_7ShZGbURN-pfSKkLp7Enlh3gWp8z_ndfIT8NYxqfAY1iIo_E8aaN5r37ZUXUmDQ84eptikJp-29YgvkVz-uzVRTodsxG09f5TmujNtV_TSlf000z_q4lCzx7GO6Yx23mVgr75JS0C5gIW1x07rEvr96w4vq_oQKyz3MZjt_lUJyAQd2qbNHTgmuhUWWHJPh_EuEEQPOT1zZu5RW6M"/>
+<div class="absolute -bottom-1 -right-1 bg-emerald-500 w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Prof. Elena Vance</p>
+<p class="text-xs text-on-surface-variant">Submitted "Neuro-Adaptive Learning"</p>
+<span class="inline-block mt-2 text-[10px] font-label font-bold text-on-secondary-container bg-secondary-container px-3 py-1 rounded-full">Completed</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">description</span>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-amber-500 w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: 'wght' 700;">history</span>
+</div>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">New Report Draft</p>
+<p class="text-xs text-on-surface-variant">Q3 Faculty Performance Summary</p>
+<span class="inline-block mt-2 text-[10px] font-label font-bold text-on-primary-container bg-primary-fixed-dim/30 px-3 py-1 rounded-full">In Review</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="relative">
+<img alt="Activity User" class="w-10 h-10 rounded-full object-cover" data-alt="headshot of a male researcher with glasses in a modern clean laboratory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCPpfDFQ-f_uzaoKxBSg3i7NZnFgvRRDwEWIzYqWZoS8iYZPQBtdq_nV5JZkapsSJ_x9JeWHRIx160c22MOyig9c9XlXMrJzsEscVjJIJw1usQ57qiKR3hpgdE9GZw8bwHZYJ_laY0wG31-KKkbAg0_8tRqOmtDShO2ghweJ5ckZCaUn3H8ZFN6IRa3ks_G5zUzCO8lF-b_Q-495_dOgbhQ3AL1ld8DakDuGSaPcB_7ojCBEmSXlZ79LHLjSPZpuBkXTKN7qpS6mU"/>
+<div class="absolute -bottom-1 -right-1 bg-surface-tint w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: 'wght' 700;">priority_high</span>
+</div>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Marcus Sterling</p>
+<p class="text-xs text-on-surface-variant">Requested access to Ethics Board</p>
+<span class="inline-block mt-2 text-[10px] font-label font-bold bg-surface-container-low px-3 py-1 rounded-full">Pending</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Highlights -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+<div class="bg-surface-container-lowest rounded-xl p-8 border-none shadow-[0_8px_30px_rgba(0,0,0,0.04)] relative overflow-hidden group">
+<div class="relative z-10">
+<span class="inline-block mb-4 text-[10px] font-bold text-white bg-slate-900 px-3 py-1 rounded-full">System Update</span>
+<h4 class="font-headline text-2xl font-extrabold mb-2">Automated Peer Reviews</h4>
+<p class="text-sm text-on-surface-variant mb-6 max-w-sm">The new AI-assisted evaluation engine is now live for all Humanities faculties. Start a trial session today.</p>
+<button class="bg-white border-2 border-slate-900 px-6 py-2.5 rounded-full text-xs font-bold hover:bg-slate-900 hover:text-white transition-all">Explore Features</button>
+</div>
+<div class="absolute top-0 right-0 w-48 h-full bg-primary-fixed-dim/10 -rotate-12 translate-x-12 translate-y-8 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
+</div>
+<div class="bg-[#d7e2ff] rounded-xl p-8 border-none shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex items-center gap-8">
+<div class="flex-1">
+<h4 class="font-headline text-2xl font-extrabold mb-2">Resource Library</h4>
+<p class="text-sm text-on-secondary-fixed-variant mb-4">Access over 4,500+ academic templates and compliance guidelines.</p>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-white/40 backdrop-blur-md rounded-full text-[10px] font-bold">Guidelines</span>
+<span class="px-3 py-1 bg-white/40 backdrop-blur-md rounded-full text-[10px] font-bold">Templates</span>
+<span class="px-3 py-1 bg-white/40 backdrop-blur-md rounded-full text-[10px] font-bold">+12 More</span>
+</div>
+</div>
+<div class="w-32 h-32 bg-white/30 backdrop-blur-md rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl text-on-secondary-fixed opacity-40" style="font-variation-settings: 'wght' 200;">menu_book</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>
