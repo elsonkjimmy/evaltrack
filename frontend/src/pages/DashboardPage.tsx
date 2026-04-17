@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppStore } from '../store/useAppStore';
-import { Plus, FolderOpen, Users, Calendar, ArrowRight, LayoutGrid, Clock, BookOpen, FileText } from 'lucide-react';
+import { Plus, FolderOpen, Users, Calendar, ArrowRight, LayoutGrid, Clock, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const DashboardPage: React.FC = () => {

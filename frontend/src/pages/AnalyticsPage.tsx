@@ -76,7 +76,7 @@ export const AnalyticsPage: React.FC = () => {
                     paddingAngle={5}
                     dataKey="students"
                   >
-                    {data.map((entry, index) => (
+                    {data.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>

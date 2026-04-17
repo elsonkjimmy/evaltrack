@@ -5,6 +5,7 @@ import { AddBonusMalusModal } from './AddBonusMalusModal';
 import { EditStudentModal } from '../students/EditStudentModal';
 import { DeleteConfirmModal } from '../ui/DeleteConfirmModal';
 import { Trash2, Edit2 } from 'lucide-react';
+
 import { toast } from 'sonner';
 
 // Strict Dimensions for Airtable-like stability
@@ -111,7 +112,14 @@ export const GradeGrid: React.FC = () => {
     <div className="flex-1 flex flex-col min-h-0 bg-navy/20 border border-white/10 overflow-hidden rounded-sm shadow-2xl">
       <AddBonusMalusModal {...adjustmentModal} onClose={() => setAdjustmentModal({ ...adjustmentModal, isOpen: false })} />
       <EditStudentModal {...editModal} onClose={() => setEditModal({ ...editModal, isOpen: false })} />
-      <DeleteConfirmModal {...deleteModal} onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })} onConfirm={handleDeleteConfirm} loading={isDeleting} />
+      <DeleteConfirmModal 
+        {...deleteModal} 
+        title="Delete Student"
+        message={`Are you sure you want to delete ${deleteModal.studentName}? This will permanently remove all their grades from this room.`}
+        onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })} 
+        onConfirm={handleDeleteConfirm} 
+        loading={isDeleting} 
+      />
 
       <div className="flex-1 flex overflow-hidden">
         

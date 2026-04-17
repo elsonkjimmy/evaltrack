@@ -35,7 +35,7 @@ export const ArchivesPage: React.FC = () => {
                 <p className="font-bold text-sm text-white/60">No archives found.</p>
              </div>
           ) : (
-            rooms.map((room, i) => (
+            rooms.map((room) => (
               <div key={room.id} className="flex items-center justify-between p-4 px-6 hover:bg-white/8 rounded-2xl transition-all group border border-transparent hover:border-white/8">
                 <div className="flex items-center gap-6">
                    <div className="w-12 h-12 bg-emerald-500/15 text-emerald-300 rounded-xl flex items-center justify-center">

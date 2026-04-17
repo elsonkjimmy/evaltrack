@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Settings2, Loader2, AlertCircle, CheckCircle2, Calculator, Save, Trash2, Edit3, Percent } from 'lucide-react';
+import { X, Settings2, Loader2, AlertCircle, CheckCircle2, Calculator, Save, Trash2 } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 
 interface EditRoomModalProps {
