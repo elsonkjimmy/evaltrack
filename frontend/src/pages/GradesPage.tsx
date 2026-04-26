@@ -7,16 +7,17 @@ import { AddEvaluationModal } from '../components/grades/AddEvaluationModal';
 import { RoomStatistics } from '../components/grades/RoomStatistics';
 import { RoomMembersModal } from '../components/layout/RoomMembersModal';
 import { EditRoomModal } from '../components/layout/EditRoomModal';
+import { JoinRequestsModal } from '../components/layout/JoinRequestsModal';
 import { useAppStore } from '../store/useAppStore';
 import { exportRoomToExcel, exportRoomToPDF } from '../lib/exportUtils';
-import { Settings2, FileText } from 'lucide-react';
+import { Settings2, FileText, Bell } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const GradesPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const roomId = searchParams.get('room');
   const navigate = useNavigate();
-  
+
   const { 
     currentRoom, 
     fetchRoomData, 
@@ -25,16 +26,19 @@ export const GradesPage: React.FC = () => {
     currentGrades,
     currentSN,
     currentBonusMalus,
+    joinRequests,
     toggleRoomLock,
     searchQuery,
     setSearchQuery
   } = useAppStore();
-  
+
   const [loading, setLoading] = useState(true);
   const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
   const [isEvalModalOpen, setIsEvalModalOpen] = useState(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
   const [isEditRoomModalOpen, setIsEditRoomModalOpen] = useState(false);
+  const [isJoinRequestsModalOpen, setIsJoinRequestsModalOpen] = useState(false);
+
 
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
 
@@ -131,6 +135,7 @@ export const GradesPage: React.FC = () => {
       <AddEvaluationModal isOpen={isEvalModalOpen} onClose={() => setIsEvalModalOpen(false)} />
       <RoomMembersModal isOpen={isMembersModalOpen} onClose={() => setIsMembersModalOpen(false)} />
       <EditRoomModal isOpen={isEditRoomModalOpen} onClose={() => setIsEditRoomModalOpen(false)} />
+      <JoinRequestsModal isOpen={isJoinRequestsModalOpen} onClose={() => setIsJoinRequestsModalOpen(false)} />
       
       {/* TopBar de la salle - Transparent */}
       <div className="bg-white/10 backdrop-blur-xl rounded-sm p-8 border border-white/10 shadow-2xl flex justify-between items-center z-10">
@@ -147,6 +152,20 @@ export const GradesPage: React.FC = () => {
                  title="Room Settings"
                >
                  <Settings2 size={18} />
+               </button>
+               
+               {/* Join Requests Bell */}
+               <button 
+                 onClick={() => setIsJoinRequestsModalOpen(true)}
+                 className="relative p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white rounded-xl transition-all border border-white/5 shadow-sm ml-2"
+                 title="Enrollment Requests"
+               >
+                 <Bell size={18} />
+                 {joinRequests.length > 0 && (
+                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-black rounded-full flex items-center justify-center animate-bounce shadow-lg border border-navy">
+                     {joinRequests.length}
+                   </span>
+                 )}
                </button>
              </div>
              <div className="flex items-center gap-3">

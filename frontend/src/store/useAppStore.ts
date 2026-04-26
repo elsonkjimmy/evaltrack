@@ -37,12 +37,16 @@ interface AppState {
   currentSN: any[];
   currentBonusMalus: any[];
   currentMembers: any[];
+  joinRequests: any[];
   
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   
   setCurrentRoom: (room: any | null) => void;
   fetchRoomData: (roomId: string) => Promise<void>;
+  fetchJoinRequests: (roomId: string) => Promise<void>;
+  approveJoinRequest: (request: any) => Promise<void>;
+  rejectJoinRequest: (requestId: string) => Promise<void>;
   updateGrade: (studentId: string, evaluationId: string, score: number | null) => Promise<void>;
   updateSN: (studentId: string, roomId: string, score: number | null) => Promise<void>;
   
@@ -119,25 +123,28 @@ export const useAppStore = create<AppState>((set, get) => ({
     const { user } = get();
     if (!user) return;
 
-    const [roomsRes, studentsRes, evalsRes] = await Promise.all([
-      supabase.from('rooms').select('id, is_locked').eq('owner_id', user.id),
-      supabase.from('students').select('id, room_id'),
-      supabase.from('evaluations').select('id, room_id')
+    // 1. Get room IDs owned by user to filter students and evaluations
+    const { data: userRooms } = await supabase.from('rooms').select('id, is_locked').eq('owner_id', user.id);
+    const roomIds = userRooms?.map(r => r.id) || [];
+
+    if (roomIds.length === 0) {
+      set({ globalStats: { totalStudents: 0, activeRooms: 0, pendingEvaluations: 0, averageSuccessRate: 0 } });
+      return;
+    }
+
+    const [studentsRes, evalsRes] = await Promise.all([
+      supabase.from('students').select('id', { count: 'exact', head: true }).in('room_id', roomIds),
+      supabase.from('evaluations').select('id', { count: 'exact', head: true }).in('room_id', roomIds)
     ]);
 
-    if (!roomsRes.error && !studentsRes.error) {
-      const activeRooms = roomsRes.data.filter(r => !r.is_locked).length;
-      const totalStudents = studentsRes.data.length;
-      
-      set({ 
-        globalStats: {
-          totalStudents,
-          activeRooms,
-          pendingEvaluations: evalsRes.data?.length || 0,
-          averageSuccessRate: 0
-        }
-      });
-    }
+    set({ 
+      globalStats: {
+        totalStudents: studentsRes.count || 0,
+        activeRooms: userRooms?.filter(r => !r.is_locked).length || 0,
+        pendingEvaluations: evalsRes.count || 0,
+        averageSuccessRate: 0
+      }
+    });
   },
 
   currentRoom: null,
@@ -147,6 +154,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   currentSN: [],
   currentBonusMalus: [],
   currentMembers: [],
+  joinRequests: [],
 
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -154,16 +162,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   setCurrentRoom: (room) => set({ currentRoom: room }),
   
   fetchRoomData: async (roomId: string) => {
-    const [roomRes, studentsRes, evaluationsRes, gradesRes, snRes, bmRes, membersRes] = await Promise.all([
+    // Parallel fetch of everything related to the room
+    const [roomRes, studentsRes, evaluationsRes, gradesRes, snRes, bmRes, membersRes, requestsRes] = await Promise.all([
       supabase.from('rooms').select('*').eq('id', roomId).single(),
       supabase.from('students').select('*').eq('room_id', roomId).order('last_name'),
       supabase.from('evaluations').select('*').eq('room_id', roomId).order('position'),
-      supabase.from('grades').select('*').in('student_id', 
-        (await supabase.from('students').select('id').eq('room_id', roomId)).data?.map(s => s.id) || []
-      ),
+      supabase.from('grades').select('*, students!inner(room_id)').eq('students.room_id', roomId),
       supabase.from('session_normale').select('*').eq('room_id', roomId),
       supabase.from('bonus_malus').select('*').eq('room_id', roomId),
-      supabase.from('room_members').select('*, profiles(full_name, email, avatar_url)').eq('room_id', roomId)
+      supabase.from('room_members').select('*, profiles(full_name, email, avatar_url)').eq('room_id', roomId),
+      supabase.from('join_requests').select('*').eq('room_id', roomId).eq('status', 'pending')
     ]);
 
     if (!roomRes.error) set({ currentRoom: roomRes.data });
@@ -173,6 +181,48 @@ export const useAppStore = create<AppState>((set, get) => ({
     if (!snRes.error) set({ currentSN: snRes.data || [] });
     if (!bmRes.error) set({ currentBonusMalus: bmRes.data || [] });
     if (!membersRes.error) set({ currentMembers: membersRes.data || [] });
+    if (!requestsRes.error) set({ joinRequests: requestsRes.data || [] });
+  },
+
+  fetchJoinRequests: async (roomId: string) => {
+    const { data, error } = await supabase
+      .from('join_requests')
+      .select('*')
+      .eq('room_id', roomId)
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+    
+    if (!error) set({ joinRequests: data || [] });
+  },
+
+  approveJoinRequest: async (request: any) => {
+    // 1. Create Student
+    const { error: studentError } = await supabase.from('students').insert({
+      room_id: request.room_id,
+      matricule: request.matricule,
+      last_name: request.last_name,
+      first_name: request.first_name
+    });
+
+    if (studentError) throw studentError;
+
+    // 2. Mark Request as approved (delete it)
+    await supabase.from('join_requests').delete().eq('id', request.id);
+    
+    // 3. Update local student list and request list immediately
+    const { currentStudents, joinRequests } = get();
+    
+    // Add new student to local state for instant UI update
+    // We'll fetch the full data to be sure, but we can also update locally
+    await get().fetchRoomData(request.room_id);
+  },
+
+  rejectJoinRequest: async (requestId: string) => {
+    const { currentRoom } = get();
+    await supabase.from('join_requests').delete().eq('id', requestId);
+    if (currentRoom) {
+      await get().fetchJoinRequests(currentRoom.id);
+    }
   },
 
   fetchMembers: async (roomId: string) => {
