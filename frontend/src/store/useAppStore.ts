@@ -205,32 +205,56 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   updateGrade: async (studentId, evaluationId, score) => {
+    const { currentGrades } = get();
+    
+    // Update local state immediately for responsiveness
+    const updatedGrades = [...currentGrades.filter(g => !(g.student_id === studentId && g.evaluation_id === evaluationId))];
+    if (score !== null) {
+      updatedGrades.push({ student_id: studentId, evaluation_id: evaluationId, score, updated_at: new Date().toISOString() });
+    }
+    set({ currentGrades: updatedGrades });
+
     const { error } = await supabase.from('grades').upsert({
       student_id: studentId,
       evaluation_id: evaluationId,
       score,
       updated_at: new Date().toISOString()
-    });
+    }, { onConflict: 'student_id,evaluation_id' });
 
-    if (!error) {
+    if (error) {
+      console.error('Error updating grade:', error);
+      // Re-fetch to ensure consistency on error
       const { data } = await supabase.from('grades').select('*').in('student_id', 
         get().currentStudents.map((s: any) => s.id)
       );
       if (data) set({ currentGrades: data });
+      throw error;
     }
   },
 
   updateSN: async (studentId, roomId, score) => {
+    const { currentSN } = get();
+    
+    // Update local state immediately
+    const updatedSN = [...currentSN.filter(sn => sn.student_id !== studentId)];
+    if (score !== null) {
+      updatedSN.push({ student_id: studentId, room_id: roomId, score, updated_at: new Date().toISOString() });
+    }
+    set({ currentSN: updatedSN });
+
     const { error } = await supabase.from('session_normale').upsert({
       student_id: studentId,
       room_id: roomId,
       score,
       updated_at: new Date().toISOString()
-    });
+    }, { onConflict: 'student_id,room_id' });
 
-    if (!error) {
-       const { data } = await supabase.from('session_normale').select('*').eq('room_id', roomId);
-       if (data) set({ currentSN: data });
+    if (error) {
+      console.error('Error updating SN:', error);
+      // Re-fetch on error
+      const { data } = await supabase.from('session_normale').select('*').eq('room_id', roomId);
+      if (data) set({ currentSN: data });
+      throw error;
     }
   },
 

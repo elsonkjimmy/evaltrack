@@ -26,33 +26,74 @@ const GradeCell: React.FC<{
   isLocked?: boolean;
 }> = ({ value, max, onSave, isLocked }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [tempVal, setTempVal] = useState(value === null ? '' : String(value));
 
+  // Sync internal state when external value changes
+  React.useEffect(() => {
+    if (!isEditing) {
+      setTempVal(value === null ? '' : String(value));
+    }
+  }, [value, isEditing]);
+
   const handleBlur = async () => {
-    setIsEditing(false);
-    if (tempVal.trim() === '') {
-      if (value !== null) await onSave(null);
-    } else {
-      const parsed = parseFloat(tempVal.replace(',', '.'));
-      if (!isNaN(parsed) && parsed >= 0 && parsed <= max) {
-        if (parsed !== value) await onSave(parsed);
-      } else {
-        setTempVal(value === null ? '' : String(value));
-      }
+    if (isSaving) return;
+    
+    const currentTemp = tempVal.trim();
+    const parsed = currentTemp === '' ? null : parseFloat(currentTemp.replace(',', '.'));
+    
+    // Check if value changed
+    if (parsed === value) {
+      setIsEditing(false);
+      return;
+    }
+
+    // Validate
+    if (parsed !== null && (isNaN(parsed) || parsed < 0 || parsed > max)) {
+      toast.error(`Invalid grade: must be between 0 and ${max}`);
+      setTempVal(value === null ? '' : String(value));
+      setIsEditing(false);
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      await onSave(parsed);
+      setIsEditing(false);
+    } catch (err: any) {
+      toast.error("Failed to save: " + (err.message || "Unknown error"));
+      setTempVal(value === null ? '' : String(value));
+      setIsEditing(false);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   if (isEditing) {
     return (
-      <input
-        autoFocus
-        type="text"
-        className="w-full h-full text-center bg-navy text-white outline-none ring-1 ring-terra"
-        value={tempVal}
-        onChange={(e) => setTempVal(e.target.value)}
-        onBlur={handleBlur}
-        onKeyDown={(e) => e.key === 'Enter' && handleBlur()}
-      />
+      <div className="w-full h-full relative">
+        <input
+          autoFocus
+          type="text"
+          disabled={isSaving}
+          className={`w-full h-full text-center bg-navy text-white outline-none ring-1 ${isSaving ? 'ring-white/20 opacity-50' : 'ring-terra'}`}
+          value={tempVal}
+          onChange={(e) => setTempVal(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleBlur();
+            if (e.key === 'Escape') {
+              setTempVal(value === null ? '' : String(value));
+              setIsEditing(false);
+            }
+          }}
+        />
+        {isSaving && (
+          <div className="absolute inset-0 flex items-center justify-center bg-navy/50">
+            <div className="w-3 h-3 border-2 border-terra border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -66,15 +107,20 @@ const GradeCell: React.FC<{
 
   return (
     <div 
-      className={`w-full h-full flex items-center justify-center cursor-pointer hover:bg-white/5 transition-colors ${getPercentColor(value, max)}`}
-      onDoubleClick={() => !isLocked && setIsEditing(true)}
+      className={`w-full h-full flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors relative group ${getPercentColor(value, max)}`}
+      onClick={() => !isLocked && !isSaving && setIsEditing(true)}
     >
       {value ?? '-'}
+      {!isLocked && !isEditing && (
+        <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Edit2 size={8} className="text-white/20" />
+        </div>
+      )}
     </div>
   );
 };
 
-export const GradeGrid: React.FC = () => {
+export const GradeGrid: React.FC<{ onOpenSettings?: () => void }> = ({ onOpenSettings }) => {
   const { 
     currentRoom, currentStudents, currentEvaluations, 
     currentGrades, currentSN, currentBonusMalus,
@@ -156,10 +202,16 @@ export const GradeGrid: React.FC = () => {
               <div style={{ width: `${(ccEvals.length * 5) + 6}rem` }} className="flex flex-col min-w-full">
                  <div className={`${HEADER_HEIGHT} flex border-b border-white/10 bg-navy/30 backdrop-blur-md`}>
                     {ccEvals.map(e => (
-                      <div key={e.id} className={`${GRADE_COL_WIDTH} flex-none border-r border-white/5 p-2 flex flex-col justify-end items-center text-center overflow-hidden`}>
+                      <div key={e.id} className={`${GRADE_COL_WIDTH} flex-none border-r border-white/5 p-2 flex flex-col justify-end items-center text-center overflow-hidden group/header relative`}>
                          <span className="text-[7px] text-white/40 uppercase font-black tracking-tighter">SECTION CC</span>
                          <span className="text-[8px] font-black text-terra uppercase truncate w-full">{e.label}</span>
-                         <span className="text-[7px] text-white/20">{e.weight}%</span>
+                         <button 
+                           onClick={() => onOpenSettings?.()}
+                           className="text-[7px] text-white/20 hover:text-terra transition-colors font-bold flex items-center gap-0.5"
+                           title="Click to modify weights"
+                         >
+                           {e.weight}%
+                         </button>
                       </div>
                     ))}
                     <div className={`${TOTAL_COL_WIDTH} flex-none p-2 flex items-end justify-center text-[10px] font-black bg-terra/10 text-terra-light tracking-widest`}>CC TOTAL</div>
@@ -167,11 +219,16 @@ export const GradeGrid: React.FC = () => {
                  <div className="flex-1">
                     {filteredStudents.map(student => {
                       const studentGrades = currentGrades.filter(g => g.student_id === student.id);
+                      const studentBM = currentBonusMalus.filter(bm => bm.student_id === student.id);
                       const result = calculateStudentGrades({
                         ccInputs: ccEvals.map(e => ({ score: studentGrades.find(g => g.evaluation_id === e.id)?.score ?? null, weight: Number(e.weight), absenceStatus: 'present' })),
-                        tpInputs: [], sn: null, bonusMalusList: [],
-                        ccCoefficient: Number(currentRoom.cc_coefficient), tpCoefficient: 0,
-                        passThreshold: 0, roundingRule: (currentRoom.rounding_rule as RoundingRule) || 'tenth'
+                        tpInputs: [], 
+                        sn: null, 
+                        bonusMalusList: studentBM.map(bm => ({ value: Number(bm.value) })),
+                        ccCoefficient: Number(currentRoom.cc_coefficient), 
+                        tpCoefficient: 0,
+                        passThreshold: 0, 
+                        roundingRule: (currentRoom.rounding_rule as RoundingRule) || 'tenth'
                       });
                       return (
                         <div key={student.id} className={`${ROW_HEIGHT} flex border-b border-white/5 hover:bg-white/5`}>
@@ -195,10 +252,16 @@ export const GradeGrid: React.FC = () => {
               <div style={{ width: `${(tpEvals.length * 5) + 6}rem` }} className="flex flex-col min-w-full">
                  <div className={`${HEADER_HEIGHT} flex border-b border-white/10 bg-blue-900/20 backdrop-blur-md`}>
                     {tpEvals.map(e => (
-                      <div key={e.id} className={`${GRADE_COL_WIDTH} flex-none border-r border-white/5 p-2 flex flex-col justify-end items-center text-center overflow-hidden`}>
+                      <div key={e.id} className={`${GRADE_COL_WIDTH} flex-none border-r border-white/5 p-2 flex flex-col justify-end items-center text-center overflow-hidden group/header relative`}>
                          <span className="text-[7px] text-blue-300/40 uppercase font-black tracking-tighter">SECTION TP</span>
                          <span className="text-[8px] font-black text-blue-300 uppercase truncate w-full">{e.label}</span>
-                         <span className="text-[7px] text-white/20">{e.weight}%</span>
+                         <button 
+                           onClick={() => onOpenSettings?.()}
+                           className="text-[7px] text-white/20 hover:text-blue-300 transition-colors font-bold flex items-center gap-0.5"
+                           title="Click to modify weights"
+                         >
+                           {e.weight}%
+                         </button>
                       </div>
                     ))}
                     <div className={`${TOTAL_COL_WIDTH} flex-none p-2 flex items-end justify-center text-[10px] font-black bg-blue-400/10 text-blue-300 tracking-widest`}>TP TOTAL</div>
@@ -232,7 +295,7 @@ export const GradeGrid: React.FC = () => {
         <div className="flex-1 flex flex-col bg-navy z-30 shadow-2xl border-l border-white/10">
            <div className={`${HEADER_HEIGHT} flex border-b border-white/10`}>
               <div className={`${RESULT_COL_WIDTH} flex-none p-2 flex items-end justify-center text-[9px] uppercase font-bold text-white/30`}>SN /40</div>
-              <div className={`${RESULT_COL_WIDTH} flex-none p-2 flex items-end justify-center text-[9px] uppercase font-bold text-white/30`}>B/M</div>
+              <div className={`${RESULT_COL_WIDTH} flex-none p-2 flex items-end justify-center text-[9px] uppercase font-bold text-white/30`}>BONUS / MALUS</div>
               <div className="flex-1 p-2 flex items-end justify-center text-[10px] uppercase font-black bg-terra text-white tracking-widest text-center leading-tight">FINAL<br/><span className="text-[7px] opacity-60">/ 100</span></div>
            </div>
            <div className="flex-1 overflow-hidden">

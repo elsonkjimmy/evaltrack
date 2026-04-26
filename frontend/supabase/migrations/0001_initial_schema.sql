@@ -105,3 +105,27 @@ CREATE POLICY "room_access_students" ON students FOR ALL
   USING (EXISTS (
     SELECT 1 FROM rooms WHERE rooms.id = students.room_id AND (rooms.owner_id = auth.uid() OR EXISTS (SELECT 1 FROM room_members WHERE room_id = rooms.id AND user_id = auth.uid()))
   ));
+
+ALTER TABLE evaluations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "room_access_evaluations" ON evaluations FOR ALL
+  USING (EXISTS (
+    SELECT 1 FROM rooms WHERE rooms.id = evaluations.room_id AND (rooms.owner_id = auth.uid() OR EXISTS (SELECT 1 FROM room_members WHERE room_id = rooms.id AND user_id = auth.uid()))
+  ));
+
+ALTER TABLE grades ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "room_access_grades" ON grades FOR ALL
+  USING (EXISTS (
+    SELECT 1 FROM students s JOIN rooms r ON s.room_id = r.id WHERE s.id = grades.student_id AND (r.owner_id = auth.uid() OR EXISTS (SELECT 1 FROM room_members WHERE room_id = r.id AND user_id = auth.uid()))
+  ));
+
+ALTER TABLE session_normale ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "room_access_sn" ON session_normale FOR ALL
+  USING (EXISTS (
+    SELECT 1 FROM rooms WHERE rooms.id = session_normale.room_id AND (rooms.owner_id = auth.uid() OR EXISTS (SELECT 1 FROM room_members WHERE room_id = rooms.id AND user_id = auth.uid()))
+  ));
+
+ALTER TABLE bonus_malus ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "room_access_bm" ON bonus_malus FOR ALL
+  USING (EXISTS (
+    SELECT 1 FROM rooms WHERE rooms.id = bonus_malus.room_id AND (rooms.owner_id = auth.uid() OR EXISTS (SELECT 1 FROM room_members WHERE room_id = rooms.id AND user_id = auth.uid()))
+  ));

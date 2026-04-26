@@ -8,8 +8,8 @@ import { RoomStatistics } from '../components/grades/RoomStatistics';
 import { RoomMembersModal } from '../components/layout/RoomMembersModal';
 import { EditRoomModal } from '../components/layout/EditRoomModal';
 import { useAppStore } from '../store/useAppStore';
-import { exportRoomToExcel } from '../lib/exportUtils';
-import { Settings2 } from 'lucide-react';
+import { exportRoomToExcel, exportRoomToPDF } from '../lib/exportUtils';
+import { Settings2, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const GradesPage: React.FC = () => {
@@ -50,6 +50,23 @@ export const GradesPage: React.FC = () => {
       toast.success("Excel report exported successfully");
     } catch (err) {
       toast.error("Failed to export Excel report");
+    }
+  };
+
+  const handlePDFExport = () => {
+    if (!currentRoom) return;
+    try {
+      exportRoomToPDF(
+        currentRoom,
+        currentStudents,
+        currentEvaluations,
+        currentGrades,
+        currentSN,
+        currentBonusMalus
+      );
+      toast.success("PDF report exported successfully");
+    } catch (err) {
+      toast.error("Failed to export PDF report");
     }
   };
 
@@ -166,9 +183,17 @@ export const GradesPage: React.FC = () => {
           </button>
           <button 
             onClick={handleExport}
-            className="flex items-center gap-2 bg-white text-navy px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg hover:bg-slate-100"
+            className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-navy border border-white/10 px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg"
+            title="Export to Excel"
           >
-            <Download size={14} /> Export Results
+            <Download size={14} /> Excel
+          </button>
+          <button 
+            onClick={handlePDFExport}
+            className="flex items-center gap-2 bg-white text-navy px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg hover:bg-slate-100"
+            title="Export to PDF"
+          >
+            <FileText size={14} /> PDF Report
           </button>
           <button 
             onClick={handleToggleLock}
@@ -196,9 +221,21 @@ export const GradesPage: React.FC = () => {
               <div className="h-4 w-[1px] bg-white/10"></div>
               
               <div className="flex gap-3 items-center text-xs font-bold">
-                 <span className="bg-terra/20 text-terra-light border border-terra/30 px-3 py-1 rounded-lg">CC (Coef {currentRoom.cc_coefficient})</span>
+                 <button 
+                   onClick={() => setIsEditRoomModalOpen(true)}
+                   className="bg-terra/20 text-terra-light border border-terra/30 px-3 py-1 rounded-lg hover:bg-terra/30 transition-colors"
+                   title="Click to modify CC Coefficient"
+                 >
+                   CC (Coef {currentRoom.cc_coefficient})
+                 </button>
                  <span className="text-white/20 text-lg font-light">+</span>
-                 <span className="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-lg">TP (Coef {currentRoom.tp_coefficient})</span>
+                 <button 
+                   onClick={() => setIsEditRoomModalOpen(true)}
+                   className="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-lg hover:bg-blue-500/30 transition-colors"
+                   title="Click to modify TP Coefficient"
+                 >
+                   TP (Coef {currentRoom.tp_coefficient})
+                 </button>
                  <span className="text-white/20 text-lg font-light">+</span>
                  <span className="bg-white/10 text-white/70 border border-white/10 px-3 py-1 rounded-lg">SN</span>
               </div>
@@ -243,7 +280,7 @@ export const GradesPage: React.FC = () => {
                  </button>
               </div>
             ) : (
-              <GradeGrid />
+              <GradeGrid onOpenSettings={() => setIsEditRoomModalOpen(true)} />
             )}
          </div>
       </div>

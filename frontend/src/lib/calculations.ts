@@ -50,12 +50,13 @@ export function calculateStudentGrades(params: {
 
   const ccBrut = computeWeightedScore(ccInputs);
   const ccTotalRaw = ccBrut * ccCoefficient;
-  const ccTotal = applyRounding(Math.min(ccTotalRaw, 20), roundingRule);
-
+  
   const bonusMalusSum = bonusMalusList.reduce((acc, bm) => acc + bm.value, 0);
 
+  // Apply bonus/malus to the raw CC total (weighted)
+  // Then apply rounding and clamp to 20 (or max CC possible)
   const ccFinal = applyRounding(
-    Math.min(Math.max(ccTotal + bonusMalusSum, 0), 20),
+    Math.min(Math.max(ccTotalRaw + bonusMalusSum, 0), 20),
     roundingRule
   );
 
@@ -72,8 +73,8 @@ export function calculateStudentGrades(params: {
 
   return {
     ccBrut:         applyRounding(ccBrut, roundingRule),
-    ccTotal,
-    ccBeforeAdjust: ccTotal,
+    ccTotal:        applyRounding(Math.min(ccTotalRaw, 20), roundingRule),
+    ccBeforeAdjust: applyRounding(Math.min(ccTotalRaw, 20), roundingRule),
     bonusMalusSum:  applyRounding(bonusMalusSum, roundingRule),
     ccFinal,
     tpBrut:         applyRounding(tpBrut, roundingRule),
