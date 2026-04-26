@@ -36,6 +36,8 @@ export const GradesPage: React.FC = () => {
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
   const [isEditRoomModalOpen, setIsEditRoomModalOpen] = useState(false);
 
+  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+
   const handleExport = () => {
     if (!currentRoom) return;
     try {
@@ -48,6 +50,7 @@ export const GradesPage: React.FC = () => {
         currentBonusMalus
       );
       toast.success("Excel report exported successfully");
+      setIsExportMenuOpen(false);
     } catch (err) {
       toast.error("Failed to export Excel report");
     }
@@ -65,6 +68,7 @@ export const GradesPage: React.FC = () => {
         currentBonusMalus
       );
       toast.success("PDF report exported successfully");
+      setIsExportMenuOpen(false);
     } catch (err) {
       toast.error("Failed to export PDF report");
     }
@@ -181,20 +185,37 @@ export const GradesPage: React.FC = () => {
           >
             <UsersIcon size={14} /> Invite
           </button>
-          <button 
-            onClick={handleExport}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-navy border border-white/10 px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg"
-            title="Export to Excel"
-          >
-            <Download size={14} /> Excel
-          </button>
-          <button 
-            onClick={handlePDFExport}
-            className="flex items-center gap-2 bg-white text-navy px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg hover:bg-slate-100"
-            title="Export to PDF"
-          >
-            <FileText size={14} /> PDF Report
-          </button>
+
+          {/* Export Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
+              className="flex items-center gap-2 bg-white text-navy px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg hover:bg-slate-100"
+            >
+              <Download size={14} /> Export
+            </button>
+            
+            {isExportMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setIsExportMenuOpen(false)} />
+                <div className="absolute right-0 mt-2 w-48 bg-navy/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <button 
+                    onClick={handleExport}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-xs font-bold border-b border-white/5"
+                  >
+                    <Download size={14} className="text-emerald-400" /> Excel (.xlsx)
+                  </button>
+                  <button 
+                    onClick={handlePDFExport}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white hover:bg-white/10 transition-colors text-xs font-bold"
+                  >
+                    <FileText size={14} className="text-rose-400" /> PDF Report (.pdf)
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
           <button 
             onClick={handleToggleLock}
             className={`flex items-center gap-2 px-6 py-3 rounded-full font-sans text-xs font-bold transition-all shadow-lg ${
